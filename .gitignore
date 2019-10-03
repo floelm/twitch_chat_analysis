@@ -1,2 +1,4 @@
 /cmd/*/config.*.json
 !/cmd/*/config.json
+
+.idea
