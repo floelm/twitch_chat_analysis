@@ -1,0 +1,14 @@
+version: '3.6'
+
+services:
+
+  rabbitmq:
+    image: rabbitmq:3.7-management
+    container_name: rabbitmq
+    hostname: rabbitmq
+    ports:
+      - "7000:15672"
+      - "7001:5672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=rabbitmquser
+      - RABBITMQ_DEFAULT_PASS=some_password

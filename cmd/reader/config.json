@@ -1,0 +1,5 @@
+{
+  "UserName": "MyUserName",
+  "OAuthToken": "oauth:abc",
+  "ChannelToJoin": "SomeChannelName"
+}
