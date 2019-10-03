@@ -7,9 +7,9 @@ import (
 )
 
 type Configuration struct {
-	UserName      string
-	OAuthToken    string
-	ChannelToJoin string
+	UserName       string
+	OAuthToken     string
+	ChannelsToJoin []string
 }
 
 func main() {
@@ -25,9 +25,11 @@ func main() {
 	})
 
 	var wg sync.WaitGroup
-	wg.Add(1)
+	wg.Add(len(configuration.ChannelsToJoin))
 
-	go stalker.Read(configuration.ChannelToJoin)
+	for _, channel := range configuration.ChannelsToJoin {
+		go stalker.Read(channel)
+	}
 
 	wg.Wait()
 }
