@@ -51,12 +51,12 @@ func NewProducer() Producer {
 	}
 
 	q, err := ch.QueueDeclare(
-		"messages", // name
-		false,      // durable
-		false,      // delete when unused
-		false,      // exclusive
-		false,      // no-wait
-		nil,        // arguments
+		"messages",
+		false,
+		false,
+		false,
+		false,
+		nil,
 	)
 
 	return Producer{
@@ -80,7 +80,7 @@ func (p *Producer) Produce(message twitch.PrivateMessage) {
 		false,
 		false,
 		amqp.Publishing{
-			ContentType: "text/plain",
+			ContentType: "application/json",
 			Body:        msgBytes,
 		},
 	)
