@@ -1,20 +1,29 @@
 package domain
 
-import "twitch_chat_analysis/pkg"
+import (
+	"strings"
+	"twitch_chat_analysis/pkg"
+)
 
 type MessageProcessor struct {
-	queuer pkg.Queuer
+	queuer     pkg.Queuer
+	termsCache TermsCache
 }
 
 func NewMessageProcessor() *MessageProcessor {
 	return &MessageProcessor{
-		queuer: pkg.NewQueuer(),
+		queuer:     pkg.NewQueuer(),
+		termsCache: NewTermsCache(),
 	}
 }
 
 func (p *MessageProcessor) Process() {
-	myHandler := func(msg string) {
-		println(msg)
+	myHandler := func(msg pkg.Message) {
+		simpleTerms := strings.Split(msg.Text, " ")
+
+		for _, term := range simpleTerms {
+			p.termsCache.IncreaseTermCount(term)
+		}
 	}
 
 	p.queuer.Receive(myHandler)

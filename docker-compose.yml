@@ -12,3 +12,9 @@ services:
     environment:
       - RABBITMQ_DEFAULT_USER=rabbitmquser
       - RABBITMQ_DEFAULT_PASS=some_password
+
+  redis:
+    image: redis:5-alpine
+    ports:
+      - 6379:6379
+    restart: always

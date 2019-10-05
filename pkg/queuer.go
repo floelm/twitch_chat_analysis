@@ -90,7 +90,7 @@ func (q *Queuer) Produce(message twitch.PrivateMessage) {
 	}
 }
 
-func (q *Queuer) Receive(handler func(msg string)) {
+func (q *Queuer) Receive(handler func(msg Message)) {
 	msgs, err := q.channel.Consume(
 		q.queue.Name,
 		"",
@@ -108,7 +108,13 @@ func (q *Queuer) Receive(handler func(msg string)) {
 
 	go func() {
 		for d := range msgs {
-			handler(string(d.Body))
+			message := Message{}
+			err := json.Unmarshal(d.Body, &message)
+			if err != nil {
+				panic(err)
+			}
+
+			handler(message)
 		}
 	}()
 
