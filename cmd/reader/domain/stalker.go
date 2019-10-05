@@ -2,11 +2,12 @@ package domain
 
 import (
 	"github.com/gempir/go-twitch-irc"
+	"twitch_chat_analysis/pkg"
 )
 
 type Stalker struct {
 	credentials Credentials
-	producer    Producer
+	queuer      pkg.Queuer
 }
 
 type Credentials struct {
@@ -15,11 +16,11 @@ type Credentials struct {
 }
 
 func NewStalker(credentials Credentials) Stalker {
-	producer := NewProducer()
+	queuer := pkg.NewQueuer()
 
 	return Stalker{
 		credentials: credentials,
-		producer:    producer,
+		queuer:      queuer,
 	}
 }
 
@@ -28,7 +29,7 @@ func (s *Stalker) Read(channel string) {
 	client.Join(channel)
 
 	client.OnPrivateMessage(func(message twitch.PrivateMessage) {
-		s.producer.Produce(message)
+		s.queuer.Produce(message)
 	})
 
 	err := client.Connect()

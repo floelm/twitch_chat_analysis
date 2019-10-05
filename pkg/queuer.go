@@ -1,10 +1,11 @@
-package domain
+package pkg
 
 import (
 	"encoding/json"
 	"fmt"
 	"github.com/gempir/go-twitch-irc"
 	"github.com/streadway/amqp"
+	"log"
 	"time"
 )
 
@@ -34,12 +35,12 @@ type Emote struct {
 	Count int
 }
 
-type Producer struct {
+type Queuer struct {
 	channel *amqp.Channel
 	queue   *amqp.Queue
 }
 
-func NewProducer() Producer {
+func NewQueuer() Queuer {
 	conn, err := amqp.Dial("amqp://rabbitmquser:some_password@localhost:7001/")
 	if err != nil {
 		panic(err)
@@ -59,24 +60,24 @@ func NewProducer() Producer {
 		nil,
 	)
 
-	return Producer{
+	return Queuer{
 		channel: ch,
 		queue:   &q,
 	}
 }
 
-func (p *Producer) Produce(message twitch.PrivateMessage) {
+func (q *Queuer) Produce(message twitch.PrivateMessage) {
 	fmt.Println(message.User.Name + " " + message.Message)
 
-	msg := p.buildMessage(message)
+	msg := q.buildMessage(message)
 	msgBytes, err := json.Marshal(msg)
 	if err != nil {
 		panic(err)
 	}
 
-	err = p.channel.Publish(
+	err = q.channel.Publish(
 		"",
-		p.queue.Name,
+		q.queue.Name,
 		false,
 		false,
 		amqp.Publishing{
@@ -89,7 +90,33 @@ func (p *Producer) Produce(message twitch.PrivateMessage) {
 	}
 }
 
-func (p *Producer) buildMessage(message twitch.PrivateMessage) Message {
+func (q *Queuer) Receive(handler func(msg string)) {
+	msgs, err := q.channel.Consume(
+		q.queue.Name,
+		"",
+		true,
+		false,
+		false,
+		false,
+		nil,
+	)
+	if err != nil {
+		panic(err)
+	}
+
+	forever := make(chan bool)
+
+	go func() {
+		for d := range msgs {
+			handler(string(d.Body))
+		}
+	}()
+
+	log.Printf("Waiting for messages...")
+	<-forever
+}
+
+func (q *Queuer) buildMessage(message twitch.PrivateMessage) Message {
 	emotes := make([]Emote, 0)
 
 	for _, emote := range message.Emotes {
