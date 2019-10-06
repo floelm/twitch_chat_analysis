@@ -36,7 +36,7 @@ func (c *TermsCache) IncreaseTermCount(term string) {
 }
 
 func (c *TermsCache) GetAll() []kv {
-	cmd := c.redis.Keys("*")
+	cmd := c.redis.Keys("*") //TODO: this is generally a bad idea :)
 	keysSlice, err := cmd.Result()
 	if err != nil {
 		panic(err)

@@ -20,10 +20,10 @@ func NewTwitchClient(applicationClientId string) TwitchClient {
 	}
 }
 
-func (c *TwitchClient) GetTopChannels() []string {
+func (c *TwitchClient) GetTopChannels(channelCount int) []string {
 	topChannels := make([]string, 0)
 
-	for i := 0; i <= 900; i = i + 100 {
+	for i := 0; i <= channelCount-100; i = i + 100 {
 		req, _ := http.NewRequest("GET", fmt.Sprintf("https://api.twitch.tv/kraken/streams/?limit=100&offset=%d", i), nil)
 		req.Header.Set("Accept", "application/vnd.twitchtv.v5+json")
 		req.Header.Set("Client-ID", c.applicationClientId)

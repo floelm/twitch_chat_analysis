@@ -10,6 +10,7 @@ type Configuration struct {
 	UserName            string
 	OAuthToken          string
 	ApplicationClientId string
+	ChannelCount        int
 }
 
 func main() {
@@ -25,7 +26,7 @@ func main() {
 	})
 
 	client := domain.NewTwitchClient(configuration.ApplicationClientId)
-	channels := client.GetTopChannels()
+	channels := client.GetTopChannels(configuration.ChannelCount)
 
 	var wg sync.WaitGroup
 	wg.Add(len(channels))

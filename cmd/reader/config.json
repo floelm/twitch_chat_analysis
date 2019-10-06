@@ -1,5 +1,6 @@
 {
   "UserName": "MyUserName",
   "OAuthToken": "oauth:abc",
-  "ApplicationClientId": "u6arxiz4do2s61cfmc8djpfi43tgn3"
+  "ApplicationClientId": "u6arxiz4do2s61cfmc8djpfi43tgn3",
+  "ChannelCount": 1000
 }
