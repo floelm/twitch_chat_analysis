@@ -1,7 +1,5 @@
 {
   "UserName": "MyUserName",
   "OAuthToken": "oauth:abc",
-  "ChannelsToJoin": [
-    "one_channel",
-    "another_channel"
-  ]}
+  "ApplicationClientId": "u6arxiz4do2s61cfmc8djpfi43tgn3"
+}

@@ -7,9 +7,9 @@ import (
 )
 
 type Configuration struct {
-	UserName       string
-	OAuthToken     string
-	ChannelsToJoin []string
+	UserName            string
+	OAuthToken          string
+	ApplicationClientId string
 }
 
 func main() {
@@ -24,10 +24,13 @@ func main() {
 		OAuthToken: configuration.OAuthToken,
 	})
 
-	var wg sync.WaitGroup
-	wg.Add(len(configuration.ChannelsToJoin))
+	client := domain.NewTwitchClient(configuration.ApplicationClientId)
+	channels := client.GetTopChannels()
 
-	for _, channel := range configuration.ChannelsToJoin {
+	var wg sync.WaitGroup
+	wg.Add(len(channels))
+
+	for _, channel := range channels {
 		go stalker.Read(channel)
 	}
 

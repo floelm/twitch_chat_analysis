@@ -18,3 +18,9 @@ services:
     ports:
       - 6379:6379
     restart: always
+
+  redis_emoticons:
+    image: redis:5-alpine
+    ports:
+      - 6380:6379
+    restart: always
