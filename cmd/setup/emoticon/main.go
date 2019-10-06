@@ -14,7 +14,7 @@ func main() {
 
 	maxPages := 2
 
-	for i := 1; i <= maxPages; i++ {
+	for i := 0; i <= maxPages; i++ {
 		req, _ := http.NewRequest("GET", fmt.Sprintf("https://api.frankerfacez.com/v1/emoticons?page=%d", i), nil)
 		resp, err := client.Do(req)
 		if err != nil {

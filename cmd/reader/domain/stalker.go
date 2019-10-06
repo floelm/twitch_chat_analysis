@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"github.com/avast/retry-go"
 	"github.com/gempir/go-twitch-irc"
 	"twitch_chat_analysis/pkg"
 )
@@ -32,7 +33,7 @@ func (s *Stalker) Read(channel string) {
 		s.queuer.Produce(message)
 	})
 
-	err := client.Connect()
+	err := retry.Do(client.Connect)
 	if err != nil {
 		panic(err)
 	}
